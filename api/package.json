@@ -9,12 +9,19 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.53.0",
+    "@aws-sdk/client-ses": "^3.53.0",
+    "@aws-sdk/lib-dynamodb": "^3.53.0",
+    "@next-auth/dynamodb-adapter": "^1.1.0",
     "next": "12.1.0",
+    "next-auth": "^4.2.1",
+    "nodemailer": "^6.7.2",
     "react": "17.0.2",
     "react-dom": "17.0.2"
   },
   "devDependencies": {
     "@types/node": "17.0.21",
+    "@types/nodemailer": "^6.4.4",
     "@types/react": "17.0.39",
     "eslint": "8.10.0",
     "eslint-config-next": "12.1.0",
