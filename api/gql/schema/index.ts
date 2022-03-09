@@ -1,7 +1,11 @@
 import { mergeTypeDefs } from '@graphql-tools/merge'
+import { DateTimeTypeDefinition } from 'graphql-scalars'
+
 import { accountSchema } from './account-schema'
+import { scalars } from './scalars'
 
-const typesArray = [accountSchema]
-// const scalarsArray = []
+const typesArray = [accountSchema, scalars]
 
-export const typeDefs = mergeTypeDefs([...typesArray])
+const scalarsArray = [DateTimeTypeDefinition]
+
+export const typeDefs = mergeTypeDefs([...typesArray, ...scalarsArray])
