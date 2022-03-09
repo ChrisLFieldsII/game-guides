@@ -1,0 +1,20 @@
+overwrite: true
+schema: 'http://localhost:3002/api/graphql'
+generates:
+  types/graphql.d.ts:
+    plugins:
+      - 'typescript'
+    config:
+      noExport: true
+      declarationKind: 'type'
+      enumsAsTypes: true
+      skipTypename: true
+
+  gql/types/resolvers.ts:
+    plugins:
+      - 'typescript'
+      - 'typescript-resolvers'
+    config:
+      skipTypename: true
+      declarationKind: 'type'
+      enumsAsTypes: true
