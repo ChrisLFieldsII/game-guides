@@ -14,12 +14,13 @@ export const accountSchema = gql`
   }
 
   type Mutation {
-    createAccount(input: CreateAccountInput!): Account!
+    updateAccount(input: UpdateAccountInput!): Account!
   }
 
-  input CreateAccountInput {
+  input UpdateAccountInput {
     id: ID!
-    name: String!
-    email: String!
+    name: String
+    email: String
+    createdAt: DateTime
   }
 `

@@ -1,0 +1,3 @@
+type GetItemInput = {
+  id: string
+}

@@ -12,6 +12,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: any;
 };
 
@@ -23,19 +24,13 @@ export type Account = {
   updatedAt: Scalars['DateTime'];
 };
 
-export type CreateAccountInput = {
-  email: Scalars['String'];
-  id: Scalars['ID'];
-  name: Scalars['String'];
-};
-
 export type Mutation = {
-  createAccount: Account;
+  updateAccount: Account;
 };
 
 
-export type MutationCreateAccountArgs = {
-  input: CreateAccountInput;
+export type MutationUpdateAccountArgs = {
+  input: UpdateAccountInput;
 };
 
 export type Query = {
@@ -45,6 +40,13 @@ export type Query = {
 
 export type QueryGetAccountArgs = {
   id: Scalars['ID'];
+};
+
+export type UpdateAccountInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']>;
+  email?: InputMaybe<Scalars['String']>;
+  id: Scalars['ID'];
+  name?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -118,24 +120,24 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Account: ResolverTypeWrapper<Account>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
-  CreateAccountInput: CreateAccountInput;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
+  UpdateAccountInput: UpdateAccountInput;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Account: Account;
   Boolean: Scalars['Boolean'];
-  CreateAccountInput: CreateAccountInput;
   DateTime: Scalars['DateTime'];
   ID: Scalars['ID'];
   Mutation: {};
   Query: {};
   String: Scalars['String'];
+  UpdateAccountInput: UpdateAccountInput;
 };
 
 export type AccountResolvers<ContextType = any, ParentType extends ResolversParentTypes['Account'] = ResolversParentTypes['Account']> = {
@@ -152,7 +154,7 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
 }
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  createAccount?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<MutationCreateAccountArgs, 'input'>>;
+  updateAccount?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<MutationUpdateAccountArgs, 'input'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
