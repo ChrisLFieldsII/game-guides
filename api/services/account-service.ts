@@ -23,7 +23,7 @@ class AccountService implements IAccountService {
       }),
     })
 
-    return account!
+    return account
   }
 }
 

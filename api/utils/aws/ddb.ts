@@ -103,7 +103,7 @@ async function updateItemById<T>(input: UpdateItemByIdParams<T>) {
 
   item = await getItemById<T>({ id })
 
-  return item
+  return item!
 }
 
 export const ddbUtils = { getItemById, updateExpressionBuilder, updateItemById }
