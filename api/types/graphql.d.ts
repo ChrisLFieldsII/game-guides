@@ -48,6 +48,7 @@ type Guide = {
 
 type GuideItem = {
   createdAt: Scalars['DateTime'];
+  description: Scalars['String'];
   id: Scalars['ID'];
   isComplete?: Maybe<Scalars['Boolean']>;
   media: Array<Media>;
@@ -57,6 +58,7 @@ type GuideItem = {
 
 type GuideSection = {
   createdAt: Scalars['DateTime'];
+  description: Scalars['String'];
   id: Scalars['ID'];
   items: Array<GuideItem>;
   name: Scalars['String'];

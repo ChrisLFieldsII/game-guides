@@ -50,6 +50,7 @@ export type Guide = {
 
 export type GuideItem = {
   createdAt: Scalars['DateTime'];
+  description: Scalars['String'];
   id: Scalars['ID'];
   isComplete?: Maybe<Scalars['Boolean']>;
   media: Array<Media>;
@@ -59,6 +60,7 @@ export type GuideItem = {
 
 export type GuideSection = {
   createdAt: Scalars['DateTime'];
+  description: Scalars['String'];
   id: Scalars['ID'];
   items: Array<GuideItem>;
   name: Scalars['String'];
@@ -242,6 +244,7 @@ export type GuideResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type GuideItemResolvers<ContextType = any, ParentType extends ResolversParentTypes['GuideItem'] = ResolversParentTypes['GuideItem']> = {
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   isComplete?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   media?: Resolver<Array<ResolversTypes['Media']>, ParentType, ContextType>;
@@ -252,6 +255,7 @@ export type GuideItemResolvers<ContextType = any, ParentType extends ResolversPa
 
 export type GuideSectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['GuideSection'] = ResolversParentTypes['GuideSection']> = {
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   items?: Resolver<Array<ResolversTypes['GuideItem']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;

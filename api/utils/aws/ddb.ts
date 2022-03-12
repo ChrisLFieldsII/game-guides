@@ -7,9 +7,9 @@ import {
 } from '@aws-sdk/lib-dynamodb'
 
 import { ddbClient } from './clients'
-import { GSI, TableName } from './constants'
+import { TableName } from './constants'
 
-async function getItemById<T>(cmd: GetItemInput): Promise<T | null> {
+async function getItemById<T>(cmd: GetItemInput): Promise<Nullable<T>> {
   const { id } = cmd
 
   const queryCmd = new QueryCommand({

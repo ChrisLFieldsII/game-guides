@@ -15,7 +15,7 @@ export default NextAuth({
 
       accountService.updateAccount({
         id: user.id,
-        name: user.id,
+        name: user.id, // cant set name to empty string or ddb considers it null.
         createdAt: new Date().toISOString(),
       })
     },
