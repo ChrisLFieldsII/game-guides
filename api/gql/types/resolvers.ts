@@ -14,6 +14,8 @@ export type Scalars = {
   Float: number;
   /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: any;
+  /** A field whose value conforms to the standard URL format as specified in RFC3986: https://www.ietf.org/rfc/rfc3986.txt. */
+  URL: any;
 };
 
 export type Account = {
@@ -23,6 +25,54 @@ export type Account = {
   name: Scalars['String'];
   updatedAt: Scalars['DateTime'];
 };
+
+export type Game = {
+  createdAt: Scalars['DateTime'];
+  description: Scalars['String'];
+  id: Scalars['ID'];
+  media: Media;
+  name: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+};
+
+export type Guide = {
+  createdAt: Scalars['DateTime'];
+  createdBy?: Maybe<Account>;
+  createdById: Scalars['ID'];
+  game?: Maybe<Game>;
+  gameId: Scalars['ID'];
+  id: Scalars['ID'];
+  isAddedToCollection: Scalars['Boolean'];
+  name: Scalars['String'];
+  sections: Array<GuideSection>;
+  updatedAt: Scalars['DateTime'];
+};
+
+export type GuideItem = {
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  isComplete?: Maybe<Scalars['Boolean']>;
+  media: Array<Media>;
+  name: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+};
+
+export type GuideSection = {
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  items: Array<GuideItem>;
+  name: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+};
+
+export type Media = {
+  type: MediaType;
+  url?: Maybe<Scalars['URL']>;
+};
+
+export type MediaType =
+  | 'IMAGE'
+  | 'VIDEO';
 
 export type Mutation = {
   updateAccount: Account;
@@ -121,10 +171,17 @@ export type ResolversTypes = {
   Account: ResolverTypeWrapper<Account>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
+  Game: ResolverTypeWrapper<Game>;
+  Guide: ResolverTypeWrapper<Guide>;
+  GuideItem: ResolverTypeWrapper<GuideItem>;
+  GuideSection: ResolverTypeWrapper<GuideSection>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
+  Media: ResolverTypeWrapper<Media>;
+  MediaType: MediaType;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
+  URL: ResolverTypeWrapper<Scalars['URL']>;
   UpdateAccountInput: UpdateAccountInput;
 };
 
@@ -133,10 +190,16 @@ export type ResolversParentTypes = {
   Account: Account;
   Boolean: Scalars['Boolean'];
   DateTime: Scalars['DateTime'];
+  Game: Game;
+  Guide: Guide;
+  GuideItem: GuideItem;
+  GuideSection: GuideSection;
   ID: Scalars['ID'];
+  Media: Media;
   Mutation: {};
   Query: {};
   String: Scalars['String'];
+  URL: Scalars['URL'];
   UpdateAccountInput: UpdateAccountInput;
 };
 
@@ -153,6 +216,55 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
   name: 'DateTime';
 }
 
+export type GameResolvers<ContextType = any, ParentType extends ResolversParentTypes['Game'] = ResolversParentTypes['Game']> = {
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  media?: Resolver<ResolversTypes['Media'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GuideResolvers<ContextType = any, ParentType extends ResolversParentTypes['Guide'] = ResolversParentTypes['Guide']> = {
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  createdBy?: Resolver<Maybe<ResolversTypes['Account']>, ParentType, ContextType>;
+  createdById?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  game?: Resolver<Maybe<ResolversTypes['Game']>, ParentType, ContextType>;
+  gameId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  isAddedToCollection?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  sections?: Resolver<Array<ResolversTypes['GuideSection']>, ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GuideItemResolvers<ContextType = any, ParentType extends ResolversParentTypes['GuideItem'] = ResolversParentTypes['GuideItem']> = {
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  isComplete?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  media?: Resolver<Array<ResolversTypes['Media']>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GuideSectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['GuideSection'] = ResolversParentTypes['GuideSection']> = {
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  items?: Resolver<Array<ResolversTypes['GuideItem']>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MediaResolvers<ContextType = any, ParentType extends ResolversParentTypes['Media'] = ResolversParentTypes['Media']> = {
+  type?: Resolver<ResolversTypes['MediaType'], ParentType, ContextType>;
+  url?: Resolver<Maybe<ResolversTypes['URL']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   updateAccount?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<MutationUpdateAccountArgs, 'input'>>;
 };
@@ -161,10 +273,20 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getAccount?: Resolver<Maybe<ResolversTypes['Account']>, ParentType, ContextType, RequireFields<QueryGetAccountArgs, 'id'>>;
 };
 
+export interface UrlScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['URL'], any> {
+  name: 'URL';
+}
+
 export type Resolvers<ContextType = any> = {
   Account?: AccountResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
+  Game?: GameResolvers<ContextType>;
+  Guide?: GuideResolvers<ContextType>;
+  GuideItem?: GuideItemResolvers<ContextType>;
+  GuideSection?: GuideSectionResolvers<ContextType>;
+  Media?: MediaResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  URL?: GraphQLScalarType;
 };
 

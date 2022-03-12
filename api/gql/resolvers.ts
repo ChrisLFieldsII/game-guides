@@ -1,4 +1,4 @@
-import { DateTimeResolver } from 'graphql-scalars'
+import { DateTimeResolver, URLResolver } from 'graphql-scalars'
 import { accountService } from '~/services'
 import { QueryResolvers, Resolvers, MutationResolvers } from './types'
 
@@ -16,6 +16,7 @@ const Mutation: MutationResolvers = {
 
 const Scalars = {
   DateTime: DateTimeResolver,
+  URL: URLResolver,
 }
 
 export const resolvers: Resolvers = {
