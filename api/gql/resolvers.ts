@@ -1,5 +1,5 @@
 import { DateTimeResolver, URLResolver } from 'graphql-scalars'
-import { accountService } from '~/services'
+import { accountService, gameService } from '~/services'
 import { QueryResolvers, Resolvers, MutationResolvers } from './types'
 
 const Query: QueryResolvers = {
@@ -9,8 +9,14 @@ const Query: QueryResolvers = {
 }
 
 const Mutation: MutationResolvers = {
+  // account
   updateAccount: (root, args) => {
     return accountService.updateAccount(args.input)
+  },
+
+  // game
+  createGame: (root, args) => {
+    return gameService.createGame(args.input)
   },
 }
 

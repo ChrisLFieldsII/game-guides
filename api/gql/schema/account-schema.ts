@@ -21,6 +21,6 @@ export const accountSchema = gql`
     id: ID!
     name: String
     email: String
-    createdAt: DateTime
+    createdAt: DateTime # next-auth auto creates users w/o createdAt timestamp so on creation of user, update timestamp
   }
 `

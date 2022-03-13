@@ -26,6 +26,12 @@ export type Account = {
   updatedAt: Scalars['DateTime'];
 };
 
+export type CreateGameInput = {
+  description: Scalars['String'];
+  id?: InputMaybe<Scalars['ID']>;
+  name: Scalars['String'];
+};
+
 export type Game = {
   createdAt: Scalars['DateTime'];
   description: Scalars['String'];
@@ -69,7 +75,7 @@ export type GuideSection = {
 
 export type Media = {
   type: MediaType;
-  url?: Maybe<Scalars['URL']>;
+  url: Scalars['URL'];
 };
 
 export type MediaType =
@@ -77,7 +83,13 @@ export type MediaType =
   | 'VIDEO';
 
 export type Mutation = {
+  createGame: Game;
   updateAccount: Account;
+};
+
+
+export type MutationCreateGameArgs = {
+  input: CreateGameInput;
 };
 
 
@@ -87,10 +99,16 @@ export type MutationUpdateAccountArgs = {
 
 export type Query = {
   getAccount?: Maybe<Account>;
+  getGame?: Maybe<Game>;
 };
 
 
 export type QueryGetAccountArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryGetGameArgs = {
   id: Scalars['ID'];
 };
 
@@ -172,6 +190,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Account: ResolverTypeWrapper<Account>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  CreateGameInput: CreateGameInput;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   Game: ResolverTypeWrapper<Game>;
   Guide: ResolverTypeWrapper<Guide>;
@@ -191,6 +210,7 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Account: Account;
   Boolean: Scalars['Boolean'];
+  CreateGameInput: CreateGameInput;
   DateTime: Scalars['DateTime'];
   Game: Game;
   Guide: Guide;
@@ -265,16 +285,18 @@ export type GuideSectionResolvers<ContextType = any, ParentType extends Resolver
 
 export type MediaResolvers<ContextType = any, ParentType extends ResolversParentTypes['Media'] = ResolversParentTypes['Media']> = {
   type?: Resolver<ResolversTypes['MediaType'], ParentType, ContextType>;
-  url?: Resolver<Maybe<ResolversTypes['URL']>, ParentType, ContextType>;
+  url?: Resolver<ResolversTypes['URL'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  createGame?: Resolver<ResolversTypes['Game'], ParentType, ContextType, RequireFields<MutationCreateGameArgs, 'input'>>;
   updateAccount?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<MutationUpdateAccountArgs, 'input'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   getAccount?: Resolver<Maybe<ResolversTypes['Account']>, ParentType, ContextType, RequireFields<QueryGetAccountArgs, 'id'>>;
+  getGame?: Resolver<Maybe<ResolversTypes['Game']>, ParentType, ContextType, RequireFields<QueryGetGameArgs, 'id'>>;
 };
 
 export interface UrlScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['URL'], any> {

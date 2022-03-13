@@ -24,6 +24,12 @@ type Account = {
   updatedAt: Scalars['DateTime'];
 };
 
+type CreateGameInput = {
+  description: Scalars['String'];
+  id?: InputMaybe<Scalars['ID']>;
+  name: Scalars['String'];
+};
+
 type Game = {
   createdAt: Scalars['DateTime'];
   description: Scalars['String'];
@@ -67,7 +73,7 @@ type GuideSection = {
 
 type Media = {
   type: MediaType;
-  url?: Maybe<Scalars['URL']>;
+  url: Scalars['URL'];
 };
 
 type MediaType =
@@ -75,7 +81,13 @@ type MediaType =
   | 'VIDEO';
 
 type Mutation = {
+  createGame: Game;
   updateAccount: Account;
+};
+
+
+type MutationCreateGameArgs = {
+  input: CreateGameInput;
 };
 
 
@@ -85,10 +97,16 @@ type MutationUpdateAccountArgs = {
 
 type Query = {
   getAccount?: Maybe<Account>;
+  getGame?: Maybe<Game>;
 };
 
 
 type QueryGetAccountArgs = {
+  id: Scalars['ID'];
+};
+
+
+type QueryGetGameArgs = {
   id: Scalars['ID'];
 };
 

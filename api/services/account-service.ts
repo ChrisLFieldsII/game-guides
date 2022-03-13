@@ -1,8 +1,7 @@
-import { UpdateAccountInput } from '~/gql/types'
 import { ddbUtils } from '~/utils'
 
 interface IAccountService {
-  getAccount: (input: GetItemInput) => Promise<Account | null>
+  getAccount: (input: GetItemInput) => Promise<Nullable<Account>>
   updateAccount: (input: UpdateAccountInput) => Promise<Account>
 }
 

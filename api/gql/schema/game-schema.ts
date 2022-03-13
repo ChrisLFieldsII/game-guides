@@ -9,4 +9,18 @@ export const gameSchema = gql`
     createdAt: DateTime!
     updatedAt: DateTime!
   }
+
+  type Query {
+    getGame(id: ID!): Game
+  }
+
+  type Mutation {
+    createGame(input: CreateGameInput!): Game!
+  }
+
+  input CreateGameInput {
+    id: ID
+    name: String!
+    description: String!
+  }
 `

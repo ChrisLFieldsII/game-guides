@@ -3,7 +3,7 @@ import { gql } from 'apollo-server-micro'
 export const mediaSchema = gql`
   type Media {
     type: MediaType!
-    url: URL
+    url: URL!
   }
 
   enum MediaType {

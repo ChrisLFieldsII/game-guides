@@ -10,6 +10,7 @@ type DDBHashObject = {
   id: string
   createdAt: string
   updatedAt: string
+  readonly type: string
 }
 
 enum GSI {
@@ -24,7 +25,6 @@ type DDBMedia = DDBHashObject & {
   bucket: string
   key: string
   itemId: string
-  readonly type: 'MEDIA'
 }
 
 /**
@@ -33,7 +33,6 @@ type DDBMedia = DDBHashObject & {
 type DDBGame = DDBHashObject & {
   name: string
   description: string
-  readonly type: 'GAME'
 }
 
 /**
@@ -44,7 +43,6 @@ type DDBGuide = DDBHashObject & {
   name: string
   gameId: string
   createdById: string
-  readonly type: 'GUIDE'
 }
 
 /**
@@ -54,7 +52,6 @@ type DDBGuideSection = DDBHashObject & {
   name: string
   description: string
   guideId: string
-  readonly type: 'GUIDE_SECTION'
 }
 
 /**
@@ -64,7 +61,6 @@ type DDBGuideItem = DDBHashObject & {
   name: string
   description: string
   sectionId: string
-  readonly type: 'GUIDE_ITEM'
 }
 
 /**
@@ -74,7 +70,6 @@ type DDBAccountGuide = DDBHashObject & {
   accountId: string
   guideId: string
   gameId: string
-  readonly type: 'ACCOUNT_GUIDE'
 }
 
 /**
@@ -84,5 +79,4 @@ type DDBAccountGuideItem = DDBHashObject & {
   accountId: string
   itemId: string
   isComplete: boolean
-  readonly type: 'ACCOUNT_GUIDE_ITEM'
 }
