@@ -134,7 +134,9 @@ async function getConnection<Input extends DDBHashObject, Output>({
   opts,
   mapper,
 }: GetConnectionCmd<Input, Output>) {
-  const cursors = inputItems.map(toCursorHash)
+  const cursors = inputItems.map((item) =>
+    toCursorHash({ pk: item.pk, sk: item.sk }),
+  )
 
   const outputItems = await Promise.all(inputItems.map(mapper))
 
