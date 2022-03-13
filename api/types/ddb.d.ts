@@ -13,11 +13,6 @@ type DDBHashObject = {
   readonly type: string
 }
 
-enum GSI {
-  ID_AS_PK = 'id-as-pk',
-  FLIP_PK_SK = 'flip-pk-sk',
-}
-
 /**
  * Reps media attached to an item (photos, videos)
  */

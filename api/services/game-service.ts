@@ -13,19 +13,30 @@ import { ddbUtils, TableName, ddbClient } from '~/utils'
 import { DDBType } from '~/types'
 
 interface IGameService {
-  createGame: (input: CreateGameInput) => Promise<Nullable<Game>>
+  createGame: (input: CreateGameInput) => Promise<Game>
+  getGame: (input: GetItemInput) => Promise<Nullable<Game>>
 }
 
 class GameService implements IGameService {
   private mapper: Mapper<DDBGame, Promise<Game>> = async (from) => {
     return {
       ...from,
-      // TODO: add media functionality
+      // the Game resolver handles getting media data
       media: {
-        type: 'IMAGE',
-        url: 'https://play-lh.googleusercontent.com/HUuQc4Zpl6x7fUyX-jFMmcuUbW77REw4UKl5rfhHfP4VY6ctBU1w1I_RZWsXaojFgIo',
+        type: 'VIDEO',
+        url: '',
       },
     }
+  }
+
+  getGame = async (input: GetItemInput) => {
+    const ddbGame = await ddbUtils.getItemById<DDBGame>(input)
+
+    if (!ddbGame) {
+      return null
+    }
+
+    return this.mapper(ddbGame)
   }
 
   createGame = async (input: CreateGameInput) => {
@@ -52,7 +63,7 @@ class GameService implements IGameService {
 
     const res = await ddbClient.send(putCmd)
 
-    console.log('====== Created Game', res)
+    console.log('Created Game:', res)
 
     return this.mapper(Item)
   }

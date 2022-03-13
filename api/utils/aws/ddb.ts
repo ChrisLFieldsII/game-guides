@@ -6,6 +6,8 @@ import {
   UpdateCommand,
 } from '@aws-sdk/lib-dynamodb'
 
+import { GSI } from '~/types'
+
 import { ddbClient } from './clients'
 import { TableName } from './constants'
 
