@@ -1,36 +1,42 @@
 import { DateTimeResolver, URLResolver } from 'graphql-scalars'
-import { accountService, gameService } from '~/services'
+import { accountService, gameService, guideService } from '~/services'
 import {
   QueryResolvers,
   Resolvers,
   MutationResolvers,
   GameResolvers,
+  GuideResolvers,
 } from './types'
 
 const Query: QueryResolvers = {
   // account
-  getAccount: (root, args) => {
+  getAccount: (parent, args) => {
     return accountService.getAccount(args)
   },
 
   // game
-  getGame: (root, args) => {
+  getGame: (parent, args) => {
     return gameService.getGame(args)
   },
-  listGames: (root, args) => {
+  listGames: (parent, args) => {
     return gameService.listGames(args.input)
   },
 }
 
 const Mutation: MutationResolvers = {
   // account
-  updateAccount: (root, args) => {
+  updateAccount: (parent, args) => {
     return accountService.updateAccount(args.input)
   },
 
   // game
-  createGame: (root, args) => {
+  createGame: (parent, args) => {
     return gameService.createGame(args.input)
+  },
+
+  // guide
+  createGuide: (parent, args) => {
+    return guideService.createGuide(args.input)
   },
 }
 
@@ -40,7 +46,7 @@ const Scalars = {
 }
 
 const Game: GameResolvers = {
-  media: (root, args) => {
+  media: (parent, args) => {
     // TODO: add media functionality
     return {
       type: 'IMAGE',
@@ -49,9 +55,19 @@ const Game: GameResolvers = {
   },
 }
 
+const Guide: GuideResolvers = {
+  createdBy: (parent) => {
+    return accountService.getAccount({ id: parent.createdById })
+  },
+  game: (parent) => {
+    return gameService.getGame({ id: parent.gameId })
+  },
+}
+
 export const resolvers: Resolvers = {
+  ...Scalars,
   Query,
   Mutation,
   Game,
-  ...Scalars,
+  Guide,
 }

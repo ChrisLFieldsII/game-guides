@@ -4,6 +4,7 @@ import {
   QueryCommandInput,
   BatchGetCommand,
   UpdateCommand,
+  PutCommand,
 } from '@aws-sdk/lib-dynamodb'
 
 import { GSI } from '~/types'
@@ -12,9 +13,15 @@ import { connectionMapper } from '../mappers'
 import { ddbClient } from './clients'
 import { TableName } from './constants'
 
-async function getItemById<T>(cmd: GetItemInput): Promise<Nullable<T>> {
-  const { id } = cmd
+type GetItemByIdParams<From, To> = {
+  id: string
+  mapper: Mapper<From, To>
+}
 
+async function getItemById<From, To>({
+  id,
+  mapper,
+}: GetItemByIdParams<From, To>): Promise<Nullable<To>> {
   const queryCmd = new QueryCommand({
     TableName,
     IndexName: GSI.ID_AS_PK,
@@ -28,13 +35,13 @@ async function getItemById<T>(cmd: GetItemInput): Promise<Nullable<T>> {
   })
 
   const res = await ddbClient.send(queryCmd)
-  const item = res.Items?.[0] as T | undefined
+  const item = res.Items?.[0] as From | undefined
 
   if (!item) {
     return null
   }
 
-  return item
+  return mapper(item)
 }
 
 function updateExpressionBuilder(updateObj: any): DDBUpdateExpressionMap {
@@ -68,13 +75,16 @@ function updateExpressionBuilder(updateObj: any): DDBUpdateExpressionMap {
   return map
 }
 
-type UpdateItemByIdParams<T> = {
+type UpdateItemByIdParams<From extends Record<string, any>, To> = {
   updateParams: Record<string, any>
-  getKey: (item: T) => Record<string, any>
+  getKey: (item: From) => Record<string, any>
+  mapper: Mapper<From, To>
 }
 
-async function updateItemById<T>(input: UpdateItemByIdParams<T>) {
-  const { getKey, updateParams } = input
+async function updateItemById<From extends Record<string, any>, To>(
+  input: UpdateItemByIdParams<From, To>,
+) {
+  const { getKey, updateParams, mapper } = input
   const { id } = updateParams
 
   const newUpdateParams = {
@@ -82,7 +92,7 @@ async function updateItemById<T>(input: UpdateItemByIdParams<T>) {
     updatedAt: new Date().toISOString(),
   }
 
-  let item = await getItemById<T>({ id })
+  const item = await getItemById<From, From>({ id, mapper: (from) => from })
 
   if (!item) {
     throw new Error('Item doesnt exist')
@@ -104,9 +114,9 @@ async function updateItemById<T>(input: UpdateItemByIdParams<T>) {
 
   await ddbClient.send(updateCmd)
 
-  item = await getItemById<T>({ id })
+  const mappedItem = await getItemById({ id, mapper })
 
-  return item!
+  return mappedItem!
 }
 
 /**
@@ -145,6 +155,25 @@ async function getConnection<Input extends DDBHashObject, Output>({
   return connection
 }
 
+type CreateItemParams<From, To> = {
+  item: From
+  mapper: Mapper<From, To>
+}
+
+async function createItem<From, To>({
+  item: Item,
+  mapper,
+}: CreateItemParams<From, To>) {
+  const putCmd = new PutCommand({
+    Item,
+    TableName,
+  })
+
+  await ddbClient.send(putCmd)
+
+  return mapper(Item)
+}
+
 export const ddbUtils = {
   getItemById,
   updateExpressionBuilder,
@@ -152,4 +181,5 @@ export const ddbUtils = {
   toCursorHash,
   fromCursorHash,
   getConnection,
+  createItem,
 }

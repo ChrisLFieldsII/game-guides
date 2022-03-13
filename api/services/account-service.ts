@@ -6,23 +6,30 @@ interface IAccountService {
 }
 
 class AccountService implements IAccountService {
+  private mapper: Mapper<Account, Promise<Account>> = async (from) => {
+    return {
+      ...from,
+    }
+  }
+
   getAccount = async (input: GetItemInput) => {
-    const account = await ddbUtils.getItemById<Account>(input)
-    return account
+    return ddbUtils.getItemById({
+      id: input.id,
+      mapper: this.mapper,
+    })
   }
 
   updateAccount = async (input: UpdateAccountInput) => {
     const { id } = input
 
-    const account = await ddbUtils.updateItemById<Account>({
+    return ddbUtils.updateItemById({
       updateParams: input,
       getKey: () => ({
         pk: `USER#${id}`,
         sk: `USER#${id}`,
       }),
+      mapper: this.mapper,
     })
-
-    return account
   }
 }
 

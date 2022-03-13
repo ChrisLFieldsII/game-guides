@@ -38,6 +38,7 @@ type DDBGame = DDBItem & {
  * collection
  */
 type DDBGuide = DDBItem & {
+  description: string
   name: string
   gameId: string
   createdById: string

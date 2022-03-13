@@ -22,6 +22,7 @@ class GameService implements IGameService {
   private mapper: Mapper<DDBGame, Promise<Game>> = async (from) => {
     return {
       ...from,
+
       // the `Game` resolver handles getting media data
       media: {
         type: 'VIDEO',
@@ -30,21 +31,15 @@ class GameService implements IGameService {
     }
   }
 
-  private getKeys = ({ name }: { name: string }): DDBHashObject => {
+  private getKey = ({ name }: { name: string }): DDBHashObject => {
     return {
       pk: `${DDBType.GAME}#${name.getFirst4Chars()}`,
       sk: name.normalizeGameName(),
     }
   }
 
-  getGame = async (input: GetItemInput) => {
-    const ddbGame = await ddbUtils.getItemById<DDBGame>(input)
-
-    if (!ddbGame) {
-      return null
-    }
-
-    return this.mapper(ddbGame)
+  getGame = async ({ id }: GetItemInput) => {
+    return ddbUtils.getItemById({ id, mapper: this.mapper })
   }
 
   createGame = async (input: CreateGameInput) => {
@@ -53,9 +48,9 @@ class GameService implements IGameService {
 
     const now = time()
 
-    const Item: DDBGame = {
+    const item: DDBGame = {
       id,
-      ...this.getKeys({ name }),
+      ...this.getKey({ name }),
       name,
       description,
       type: DDBType.GAME,
@@ -63,14 +58,7 @@ class GameService implements IGameService {
       updatedAt: now.toISOString(),
     }
 
-    const putCmd = new PutCommand({
-      Item,
-      TableName,
-    })
-
-    const res = await ddbClient.send(putCmd)
-
-    return this.mapper(Item)
+    return ddbUtils.createItem({ item, mapper: this.mapper })
   }
 
   listGames = async ({
@@ -78,7 +66,7 @@ class GameService implements IGameService {
     after,
     first: limit = DEFAULT_LIMIT,
   }: ListGamesInput) => {
-    const keys = this.getKeys({ name })
+    const keys = this.getKey({ name })
 
     const queryCmd = new QueryCommand({
       TableName,

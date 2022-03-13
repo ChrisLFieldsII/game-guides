@@ -32,6 +32,14 @@ export type CreateGameInput = {
   name: Scalars['String'];
 };
 
+export type CreateGuideInput = {
+  createdById: Scalars['ID'];
+  description: Scalars['String'];
+  gameId: Scalars['ID'];
+  id?: InputMaybe<Scalars['ID']>;
+  name: Scalars['String'];
+};
+
 export type Game = {
   createdAt: Scalars['DateTime'];
   description: Scalars['String'];
@@ -56,6 +64,7 @@ export type Guide = {
   createdAt: Scalars['DateTime'];
   createdBy?: Maybe<Account>;
   createdById: Scalars['ID'];
+  description: Scalars['String'];
   game?: Maybe<Game>;
   gameId: Scalars['ID'];
   id: Scalars['ID'];
@@ -101,12 +110,18 @@ export type MediaType =
 
 export type Mutation = {
   createGame: Game;
+  createGuide: Guide;
   updateAccount: Account;
 };
 
 
 export type MutationCreateGameArgs = {
   input: CreateGameInput;
+};
+
+
+export type MutationCreateGuideArgs = {
+  input: CreateGuideInput;
 };
 
 
@@ -222,6 +237,7 @@ export type ResolversTypes = {
   Account: ResolverTypeWrapper<Account>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   CreateGameInput: CreateGameInput;
+  CreateGuideInput: CreateGuideInput;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   Game: ResolverTypeWrapper<Game>;
   GameConnection: ResolverTypeWrapper<GameConnection>;
@@ -247,6 +263,7 @@ export type ResolversParentTypes = {
   Account: Account;
   Boolean: Scalars['Boolean'];
   CreateGameInput: CreateGameInput;
+  CreateGuideInput: CreateGuideInput;
   DateTime: Scalars['DateTime'];
   Game: Game;
   GameConnection: GameConnection;
@@ -306,6 +323,7 @@ export type GuideResolvers<ContextType = any, ParentType extends ResolversParent
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   createdBy?: Resolver<Maybe<ResolversTypes['Account']>, ParentType, ContextType>;
   createdById?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   game?: Resolver<Maybe<ResolversTypes['Game']>, ParentType, ContextType>;
   gameId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -345,6 +363,7 @@ export type MediaResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createGame?: Resolver<ResolversTypes['Game'], ParentType, ContextType, RequireFields<MutationCreateGameArgs, 'input'>>;
+  createGuide?: Resolver<ResolversTypes['Guide'], ParentType, ContextType, RequireFields<MutationCreateGuideArgs, 'input'>>;
   updateAccount?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<MutationUpdateAccountArgs, 'input'>>;
 };
 
