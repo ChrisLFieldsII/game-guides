@@ -7,6 +7,9 @@ type DDBUpdateExpressionMap = {
 type DDBHashObject = {
   pk: string
   sk: string
+}
+
+type DDBItem = DDBHashObject & {
   id: string
   createdAt: string
   updatedAt: string
@@ -16,7 +19,7 @@ type DDBHashObject = {
 /**
  * Reps media attached to an item (photos, videos)
  */
-type DDBMedia = DDBHashObject & {
+type DDBMedia = DDBItem & {
   bucket: string
   key: string
   itemId: string
@@ -25,7 +28,7 @@ type DDBMedia = DDBHashObject & {
 /**
  * Reps a game that a user can create/get guides for
  */
-type DDBGame = DDBHashObject & {
+type DDBGame = DDBItem & {
   name: string
   description: string
 }
@@ -34,7 +37,7 @@ type DDBGame = DDBHashObject & {
  * Reps a guide created by a user that others can add to their
  * collection
  */
-type DDBGuide = DDBHashObject & {
+type DDBGuide = DDBItem & {
   name: string
   gameId: string
   createdById: string
@@ -43,7 +46,7 @@ type DDBGuide = DDBHashObject & {
 /**
  * Reps a guide section that is within a guide
  */
-type DDBGuideSection = DDBHashObject & {
+type DDBGuideSection = DDBItem & {
   name: string
   description: string
   guideId: string
@@ -52,7 +55,7 @@ type DDBGuideSection = DDBHashObject & {
 /**
  * Reps a guide item that is within a guide section
  */
-type DDBGuideItem = DDBHashObject & {
+type DDBGuideItem = DDBItem & {
   name: string
   description: string
   sectionId: string
@@ -61,7 +64,7 @@ type DDBGuideItem = DDBHashObject & {
 /**
  * Reps a guide that a user added to their account
  */
-type DDBAccountGuide = DDBHashObject & {
+type DDBAccountGuide = DDBItem & {
   accountId: string
   guideId: string
   gameId: string
@@ -70,7 +73,7 @@ type DDBAccountGuide = DDBHashObject & {
 /**
  * Reps a users guide item and its completion status
  */
-type DDBAccountGuideItem = DDBHashObject & {
+type DDBAccountGuideItem = DDBItem & {
   accountId: string
   itemId: string
   isComplete: boolean

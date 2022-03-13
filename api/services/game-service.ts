@@ -9,23 +9,31 @@ import {
   BatchGetCommand,
 } from '@aws-sdk/lib-dynamodb'
 
-import { ddbUtils, TableName, ddbClient } from '~/utils'
+import { ddbUtils, TableName, ddbClient, DEFAULT_LIMIT } from '~/utils'
 import { DDBType } from '~/types'
 
 interface IGameService {
   createGame: (input: CreateGameInput) => Promise<Game>
   getGame: (input: GetItemInput) => Promise<Nullable<Game>>
+  listGames: (input: ListGamesInput) => Promise<Connection<Game>>
 }
 
 class GameService implements IGameService {
   private mapper: Mapper<DDBGame, Promise<Game>> = async (from) => {
     return {
       ...from,
-      // the Game resolver handles getting media data
+      // the `Game` resolver handles getting media data
       media: {
         type: 'VIDEO',
         url: '',
       },
+    }
+  }
+
+  private getKeys = ({ name }: { name: string }): DDBHashObject => {
+    return {
+      pk: `${DDBType.GAME}#${name.getFirst4Chars()}`,
+      sk: name.normalizeGameName(),
     }
   }
 
@@ -47,8 +55,7 @@ class GameService implements IGameService {
 
     const Item: DDBGame = {
       id,
-      pk: `${DDBType.GAME}-${name.getFirst4Chars()}`,
-      sk: name.normalizeGameName(),
+      ...this.getKeys({ name }),
       name,
       description,
       type: DDBType.GAME,
@@ -63,9 +70,42 @@ class GameService implements IGameService {
 
     const res = await ddbClient.send(putCmd)
 
-    console.log('Created Game:', res)
-
     return this.mapper(Item)
+  }
+
+  listGames = async ({
+    name,
+    after,
+    first: limit = DEFAULT_LIMIT,
+  }: ListGamesInput) => {
+    const keys = this.getKeys({ name })
+
+    const queryCmd = new QueryCommand({
+      TableName,
+      KeyConditionExpression: '#pk = :pk AND begins_with(#sk, :sk)',
+      ExpressionAttributeValues: {
+        ':pk': keys.pk,
+        ':sk': keys.sk,
+      },
+      ExpressionAttributeNames: {
+        '#pk': 'pk',
+        '#sk': 'sk',
+      },
+      ExclusiveStartKey: ddbUtils.fromCursorHash(after || undefined),
+      Limit: limit || DEFAULT_LIMIT,
+    })
+
+    const ddbRes = await ddbClient.send(queryCmd)
+
+    const connection = await ddbUtils.getConnection<DDBGame, Game>({
+      items: ddbRes.Items as DDBGame[] | undefined,
+      mapper: this.mapper,
+      opts: {
+        hasNextPage: !!ddbRes.LastEvaluatedKey,
+      },
+    })
+
+    return connection
   }
 }
 

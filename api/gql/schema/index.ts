@@ -8,6 +8,7 @@ import { gameSchema } from './game-schema'
 import { guideItemSchema } from './guide-item-schema'
 import { guideSectionSchema } from './guide-section-schema'
 import { mediaSchema } from './media-schema'
+import { utilitySchema } from './utility-schema'
 
 const typesArray = [
   scalars,
@@ -17,6 +18,7 @@ const typesArray = [
   guideSectionSchema,
   gameSchema,
   mediaSchema,
+  utilitySchema,
 ]
 
 const scalarsArray = [DateTimeTypeDefinition, URLTypeDefinition]

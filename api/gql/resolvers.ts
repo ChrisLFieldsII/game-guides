@@ -17,6 +17,9 @@ const Query: QueryResolvers = {
   getGame: (root, args) => {
     return gameService.getGame(args)
   },
+  listGames: (root, args) => {
+    return gameService.listGames(args.input)
+  },
 }
 
 const Mutation: MutationResolvers = {

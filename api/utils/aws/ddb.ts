@@ -8,6 +8,7 @@ import {
 
 import { GSI } from '~/types'
 
+import { connectionMapper } from '../mappers'
 import { ddbClient } from './clients'
 import { TableName } from './constants'
 
@@ -108,4 +109,45 @@ async function updateItemById<T>(input: UpdateItemByIdParams<T>) {
   return item!
 }
 
-export const ddbUtils = { getItemById, updateExpressionBuilder, updateItemById }
+/**
+ * Convert DDB hash object into opaque cursor string representing object
+ */
+function toCursorHash(hash: DDBHashObject) {
+  return Buffer.from(JSON.stringify(hash)).toString('base64')
+}
+
+/**
+ * Convert opaque cursor string into DDB hash object
+ */
+function fromCursorHash(value?: Nullable<string>): DDBHashObject | undefined {
+  if (!value) {
+    return undefined
+  }
+
+  return JSON.parse(
+    Buffer.from(value, 'base64').toString('ascii'),
+  ) as DDBHashObject
+}
+
+async function getConnection<Input extends DDBHashObject, Output>({
+  items: inputItems = [],
+  opts,
+  mapper,
+}: GetConnectionCmd<Input, Output>) {
+  const cursors = inputItems.map(toCursorHash)
+
+  const outputItems = await Promise.all(inputItems.map(mapper))
+
+  const connection = connectionMapper(outputItems, cursors, opts)
+
+  return connection
+}
+
+export const ddbUtils = {
+  getItemById,
+  updateExpressionBuilder,
+  updateItemById,
+  toCursorHash,
+  fromCursorHash,
+  getConnection,
+}

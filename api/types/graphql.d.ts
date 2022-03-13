@@ -39,6 +39,17 @@ type Game = {
   updatedAt: Scalars['DateTime'];
 };
 
+type GameConnection = {
+  edges: Array<GameEdge>;
+  items: Array<Game>;
+  pageInfo: PageInfo;
+};
+
+type GameEdge = {
+  cursor: Scalars['String'];
+  node: Game;
+};
+
 type Guide = {
   createdAt: Scalars['DateTime'];
   createdBy?: Maybe<Account>;
@@ -71,6 +82,12 @@ type GuideSection = {
   updatedAt: Scalars['DateTime'];
 };
 
+type ListGamesInput = {
+  after?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  name: Scalars['String'];
+};
+
 type Media = {
   type: MediaType;
   url: Scalars['URL'];
@@ -95,9 +112,18 @@ type MutationUpdateAccountArgs = {
   input: UpdateAccountInput;
 };
 
+type PageInfo = {
+  endCursor: Scalars['String'];
+  hasItems: Scalars['Boolean'];
+  hasNextPage: Scalars['Boolean'];
+  numItems: Scalars['Int'];
+  startCursor: Scalars['String'];
+};
+
 type Query = {
   getAccount?: Maybe<Account>;
   getGame?: Maybe<Game>;
+  listGames: GameConnection;
 };
 
 
@@ -108,6 +134,11 @@ type QueryGetAccountArgs = {
 
 type QueryGetGameArgs = {
   id: Scalars['ID'];
+};
+
+
+type QueryListGamesArgs = {
+  input: ListGamesInput;
 };
 
 type UpdateAccountInput = {

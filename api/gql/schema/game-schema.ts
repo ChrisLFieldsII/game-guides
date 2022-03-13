@@ -10,17 +10,35 @@ export const gameSchema = gql`
     updatedAt: DateTime!
   }
 
-  type Query {
-    getGame(id: ID!): Game
+  type GameEdge {
+    node: Game!
+    cursor: String!
   }
 
-  type Mutation {
-    createGame(input: CreateGameInput!): Game!
+  type GameConnection {
+    items: [Game!]!
+    edges: [GameEdge!]!
+    pageInfo: PageInfo!
   }
 
   input CreateGameInput {
     id: ID
     name: String!
     description: String!
+  }
+
+  input ListGamesInput {
+    name: String!
+    first: Int
+    after: String
+  }
+
+  type Query {
+    getGame(id: ID!): Game
+    listGames(input: ListGamesInput!): GameConnection!
+  }
+
+  type Mutation {
+    createGame(input: CreateGameInput!): Game!
   }
 `
