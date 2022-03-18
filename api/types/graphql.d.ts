@@ -138,6 +138,7 @@ type PageInfo = {
 type Query = {
   getAccount?: Maybe<Account>;
   getGame?: Maybe<Game>;
+  getGuide?: Maybe<Guide>;
   listGames: GameConnection;
 };
 
@@ -148,6 +149,11 @@ type QueryGetAccountArgs = {
 
 
 type QueryGetGameArgs = {
+  id: Scalars['ID'];
+};
+
+
+type QueryGetGuideArgs = {
   id: Scalars['ID'];
 };
 

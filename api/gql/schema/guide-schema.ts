@@ -17,6 +17,10 @@ export const guideSchema = gql`
     updatedAt: DateTime!
   }
 
+  type Query {
+    getGuide(id: ID!): Guide
+  }
+
   type Mutation {
     createGuide(input: CreateGuideInput!): Guide!
   }

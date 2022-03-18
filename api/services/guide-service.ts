@@ -14,6 +14,7 @@ import { DDBType } from '~/types'
 
 interface IGuideService {
   createGuide: (input: CreateGuideInput) => Promise<Guide>
+  getGuide: (input: GetItemInput) => Promise<Nullable<Guide>>
 }
 
 class GuideService implements IGuideService {
@@ -55,8 +56,11 @@ class GuideService implements IGuideService {
       type: DDBType.GUIDE,
     }
 
-    // TODO: test in apollo studio
     return ddbUtils.createItem({ item, mapper: this.mapper })
+  }
+
+  getGuide = async ({ id }: GetItemInput) => {
+    return ddbUtils.getItemById({ id, mapper: this.mapper })
   }
 }
 

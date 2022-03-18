@@ -140,6 +140,7 @@ export type PageInfo = {
 export type Query = {
   getAccount?: Maybe<Account>;
   getGame?: Maybe<Game>;
+  getGuide?: Maybe<Guide>;
   listGames: GameConnection;
 };
 
@@ -150,6 +151,11 @@ export type QueryGetAccountArgs = {
 
 
 export type QueryGetGameArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryGetGuideArgs = {
   id: Scalars['ID'];
 };
 
@@ -379,6 +385,7 @@ export type PageInfoResolvers<ContextType = any, ParentType extends ResolversPar
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   getAccount?: Resolver<Maybe<ResolversTypes['Account']>, ParentType, ContextType, RequireFields<QueryGetAccountArgs, 'id'>>;
   getGame?: Resolver<Maybe<ResolversTypes['Game']>, ParentType, ContextType, RequireFields<QueryGetGameArgs, 'id'>>;
+  getGuide?: Resolver<Maybe<ResolversTypes['Guide']>, ParentType, ContextType, RequireFields<QueryGetGuideArgs, 'id'>>;
   listGames?: Resolver<ResolversTypes['GameConnection'], ParentType, ContextType, RequireFields<QueryListGamesArgs, 'input'>>;
 };
 
