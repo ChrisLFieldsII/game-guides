@@ -43,6 +43,9 @@ const Mutation: MutationResolvers = {
   createGuide: (parent, args) => {
     return guideService.createGuide(args.input)
   },
+  createGuideSection: (parent, args) => {
+    return guideService.createGuideSection(args.input)
+  },
 }
 
 const Scalars = {
@@ -66,6 +69,9 @@ const Guide: GuideResolvers = {
   },
   game: (parent) => {
     return gameService.getGame({ id: parent.gameId })
+  },
+  sections: (parent) => {
+    return guideService.listGuideSections({ guideId: parent.id })
   },
 }
 

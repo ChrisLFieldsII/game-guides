@@ -15,7 +15,7 @@ import { TableName } from './constants'
 
 type GetItemByIdParams<From, To> = {
   id: string
-  mapper: Mapper<From, To>
+  mapper?: Mapper<From, To>
 }
 
 async function getItemById<From, To>({
@@ -41,7 +41,7 @@ async function getItemById<From, To>({
     return null
   }
 
-  return mapper(item)
+  return mapper ? mapper(item) : (item as unknown as To)
 }
 
 function updateExpressionBuilder(updateObj: any): DDBUpdateExpressionMap {

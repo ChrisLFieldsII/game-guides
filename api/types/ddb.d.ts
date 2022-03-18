@@ -51,6 +51,7 @@ type DDBGuideSection = DDBItem & {
   name: string
   description: string
   guideId: string
+  order: number
 }
 
 /**
