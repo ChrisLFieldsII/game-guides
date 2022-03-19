@@ -40,6 +40,15 @@ export type CreateGuideInput = {
   name: Scalars['String'];
 };
 
+export type CreateGuideItemInput = {
+  description: Scalars['String'];
+  guideId: Scalars['ID'];
+  guideSectionId: Scalars['ID'];
+  id?: InputMaybe<Scalars['ID']>;
+  name: Scalars['String'];
+  order: Scalars['Int'];
+};
+
 export type CreateGuideSectionInput = {
   description: Scalars['String'];
   guideId: Scalars['ID'];
@@ -89,6 +98,7 @@ export type GuideItem = {
   isComplete?: Maybe<Scalars['Boolean']>;
   media: Array<Media>;
   name: Scalars['String'];
+  order: Scalars['Int'];
   updatedAt: Scalars['DateTime'];
 };
 
@@ -120,6 +130,7 @@ export type MediaType =
 export type Mutation = {
   createGame: Game;
   createGuide: Guide;
+  createGuideItem: Guide;
   createGuideSection: Guide;
   updateAccount: Account;
 };
@@ -132,6 +143,11 @@ export type MutationCreateGameArgs = {
 
 export type MutationCreateGuideArgs = {
   input: CreateGuideInput;
+};
+
+
+export type MutationCreateGuideItemArgs = {
+  input: CreateGuideItemInput;
 };
 
 
@@ -259,6 +275,7 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   CreateGameInput: CreateGameInput;
   CreateGuideInput: CreateGuideInput;
+  CreateGuideItemInput: CreateGuideItemInput;
   CreateGuideSectionInput: CreateGuideSectionInput;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   Game: ResolverTypeWrapper<Game>;
@@ -286,6 +303,7 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
   CreateGameInput: CreateGameInput;
   CreateGuideInput: CreateGuideInput;
+  CreateGuideItemInput: CreateGuideItemInput;
   CreateGuideSectionInput: CreateGuideSectionInput;
   DateTime: Scalars['DateTime'];
   Game: Game;
@@ -364,6 +382,7 @@ export type GuideItemResolvers<ContextType = any, ParentType extends ResolversPa
   isComplete?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   media?: Resolver<Array<ResolversTypes['Media']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  order?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -388,6 +407,7 @@ export type MediaResolvers<ContextType = any, ParentType extends ResolversParent
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createGame?: Resolver<ResolversTypes['Game'], ParentType, ContextType, RequireFields<MutationCreateGameArgs, 'input'>>;
   createGuide?: Resolver<ResolversTypes['Guide'], ParentType, ContextType, RequireFields<MutationCreateGuideArgs, 'input'>>;
+  createGuideItem?: Resolver<ResolversTypes['Guide'], ParentType, ContextType, RequireFields<MutationCreateGuideItemArgs, 'input'>>;
   createGuideSection?: Resolver<ResolversTypes['Guide'], ParentType, ContextType, RequireFields<MutationCreateGuideSectionArgs, 'input'>>;
   updateAccount?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<MutationUpdateAccountArgs, 'input'>>;
 };

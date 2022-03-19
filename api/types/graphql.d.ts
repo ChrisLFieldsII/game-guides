@@ -38,6 +38,15 @@ type CreateGuideInput = {
   name: Scalars['String'];
 };
 
+type CreateGuideItemInput = {
+  description: Scalars['String'];
+  guideId: Scalars['ID'];
+  guideSectionId: Scalars['ID'];
+  id?: InputMaybe<Scalars['ID']>;
+  name: Scalars['String'];
+  order: Scalars['Int'];
+};
+
 type CreateGuideSectionInput = {
   description: Scalars['String'];
   guideId: Scalars['ID'];
@@ -87,6 +96,7 @@ type GuideItem = {
   isComplete?: Maybe<Scalars['Boolean']>;
   media: Array<Media>;
   name: Scalars['String'];
+  order: Scalars['Int'];
   updatedAt: Scalars['DateTime'];
 };
 
@@ -118,6 +128,7 @@ type MediaType =
 type Mutation = {
   createGame: Game;
   createGuide: Guide;
+  createGuideItem: Guide;
   createGuideSection: Guide;
   updateAccount: Account;
 };
@@ -130,6 +141,11 @@ type MutationCreateGameArgs = {
 
 type MutationCreateGuideArgs = {
   input: CreateGuideInput;
+};
+
+
+type MutationCreateGuideItemArgs = {
+  input: CreateGuideItemInput;
 };
 
 

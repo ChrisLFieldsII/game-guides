@@ -20,6 +20,10 @@ interface IGuideService {
   // guide section
   createGuideSection: (input: CreateGuideSectionInput) => Promise<Guide>
   listGuideSections: (input: { guideId: string }) => Promise<GuideSection[]>
+
+  // guide item - items within a section
+  createGuideItem: (input: CreateGuideItemInput) => Promise<Guide>
+  listGuideItems: (input: { guideSectionId: string }) => Promise<GuideItem[]>
 }
 
 class GuideService implements IGuideService {
@@ -42,6 +46,17 @@ class GuideService implements IGuideService {
         items: [],
       }
     }
+
+  private guideItemMapper: Mapper<DDBGuideItem, Promise<GuideItem>> = async (
+    from,
+  ) => {
+    return {
+      ...from,
+
+      // calc in another resolver
+      media: [],
+    }
+  }
 
   private getGuideKey = ({
     gameId,
@@ -66,6 +81,19 @@ class GuideService implements IGuideService {
     return {
       pk: `${DDBType.GUIDE_SECTION}#${guideId}`,
       sk: guideSectionId,
+    }
+  }
+
+  private getGuideItemKey = ({
+    guideItemId,
+    guideSectionId,
+  }: {
+    guideItemId: string
+    guideSectionId: string
+  }): DDBHashObject => {
+    return {
+      pk: `${DDBType.GUIDE_ITEM}#${guideSectionId}`,
+      sk: guideItemId,
     }
   }
 
@@ -112,7 +140,7 @@ class GuideService implements IGuideService {
       type: DDBType.GUIDE_SECTION,
     }
 
-    await ddbUtils.createItem({ item, mapper: this.guideSectionMapper })
+    await ddbUtils.createItem({ item })
 
     // TODO: prob want to update guide timestamp too
 
@@ -150,6 +178,60 @@ class GuideService implements IGuideService {
     })
 
     return guideSections
+  }
+
+  createGuideItem = async (input: CreateGuideItemInput) => {
+    const id = input.id || cuid()
+    const { guideSectionId, guideId } = input
+
+    const now = time()
+
+    const item: DDBGuideItem = {
+      ...input,
+      ...this.getGuideItemKey({ guideSectionId, guideItemId: id }),
+      id,
+      sectionId: guideSectionId,
+      type: DDBType.GUIDE_ITEM,
+      createdAt: now.toISOString(),
+      updatedAt: now.toISOString(),
+    }
+
+    await ddbUtils.createItem({ item })
+
+    const ddbGuide = await this.getDDBGuide({ id: guideId })
+
+    if (!ddbGuide) {
+      // TODO: handle case where there is no guide for provided guideId
+      throw new Error('Guide Service: Invalid guideId was provided')
+    }
+
+    return this.guideMapper(ddbGuide)
+  }
+
+  listGuideItems = async ({ guideSectionId }: { guideSectionId: string }) => {
+    const queryCmd = new QueryCommand({
+      TableName,
+      KeyConditionExpression: '#pk = :pk',
+      ExpressionAttributeNames: {
+        '#pk': 'pk',
+      },
+      ExpressionAttributeValues: {
+        ':pk': `${DDBType.GUIDE_ITEM}#${guideSectionId}`,
+      },
+    })
+
+    const ddbGuideItems = ((await ddbClient.send(queryCmd)).Items ||
+      []) as DDBGuideItem[]
+
+    const guideItems = await Promise.all(
+      ddbGuideItems.map(this.guideItemMapper),
+    )
+
+    guideItems.sort((a, b) => {
+      return a.order - b.order
+    })
+
+    return guideItems
   }
 }
 

@@ -157,13 +157,13 @@ async function getConnection<Input extends DDBHashObject, Output>({
 
 type CreateItemParams<From, To> = {
   item: From
-  mapper: Mapper<From, To>
+  mapper?: Mapper<From, To>
 }
 
 async function createItem<From, To>({
   item: Item,
   mapper,
-}: CreateItemParams<From, To>) {
+}: CreateItemParams<From, To>): Promise<To> {
   const putCmd = new PutCommand({
     Item,
     TableName,
@@ -171,7 +171,7 @@ async function createItem<From, To>({
 
   await ddbClient.send(putCmd)
 
-  return mapper(Item)
+  return mapper ? mapper(Item) : (Item as unknown as To)
 }
 
 export const ddbUtils = {

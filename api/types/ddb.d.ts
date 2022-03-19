@@ -55,15 +55,6 @@ type DDBGuideSection = DDBItem & {
 }
 
 /**
- * Reps a guide item that is within a guide section
- */
-type DDBGuideItem = DDBItem & {
-  name: string
-  description: string
-  sectionId: string
-}
-
-/**
  * Reps a guide that a user added to their account
  */
 type DDBAccountGuide = DDBItem & {
@@ -80,3 +71,8 @@ type DDBAccountGuideItem = DDBItem & {
   itemId: string
   isComplete: boolean
 }
+
+/**
+ * Reps a guide item that is within a guide section
+ */
+type DDBGuideItem = DBBItem & Omit<GuideItem, 'media' | 'isComplete'>

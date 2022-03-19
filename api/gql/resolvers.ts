@@ -6,6 +6,7 @@ import {
   MutationResolvers,
   GameResolvers,
   GuideResolvers,
+  GuideSectionResolvers,
 } from './types'
 
 const Query: QueryResolvers = {
@@ -46,6 +47,9 @@ const Mutation: MutationResolvers = {
   createGuideSection: (parent, args) => {
     return guideService.createGuideSection(args.input)
   },
+  createGuideItem: (parent, args) => {
+    return guideService.createGuideItem(args.input)
+  },
 }
 
 const Scalars = {
@@ -75,10 +79,17 @@ const Guide: GuideResolvers = {
   },
 }
 
+const GuideSection: GuideSectionResolvers = {
+  items: (parent) => {
+    return guideService.listGuideItems({ guideSectionId: parent.id })
+  },
+}
+
 export const resolvers: Resolvers = {
   ...Scalars,
   Query,
   Mutation,
   Game,
   Guide,
+  GuideSection,
 }
